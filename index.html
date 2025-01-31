@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Be My Valentine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffb6c1;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            touch-action: manipulation;
+        }
+
+        #question {
+            font-size: 2em;
+            color: #ff69b4;
+            text-align: center;
+            margin: 20px;
+            padding: 0 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 15px;
+            transition: transform 0.3s;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            min-width: 100px;
+        }
+
+        #yesBtn {
+            background-color: #ff69b4;
+            color: white;
+            touch-action: auto;
+        }
+
+        #noBtn {
+            background-color: #ffc0cb;
+            color: #ff69b4;
+            position: static;
+            transition: all 0.3s;
+        }
+
+        .valentine-animation {
+            position: fixed;
+            pointer-events: none;
+            animation: float 4s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        #finalMessage {
+            font-size: 1.5em;
+            color: #ff69b4;
+            text-align: center;
+            animation: pulse 1s infinite;
+            padding: 0 15px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 480px) {
+            #question {
+                font-size: 1.8em;
+            }
+            button {
+                padding: 15px 30px;
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="question">Will you be my valentine?</div>
+    <div class="buttons">
+        <button id="yesBtn">Yes! ❤️</button>
+        <button id="noBtn">No 😢</button>
+    </div>
+
+    <script>
+        const question = document.getElementById('question');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const buttons = document.querySelector('.buttons');
+        let clickCount = 0;
+
+        // For mobile touch events
+        let isTouchDevice = 'ontouchstart' in window;
+
+        yesBtn.addEventListener('click', () => {
+            startAnimation();
+            question.innerHTML = "You'll always be my valentine, now and forever, I love you 🌹";
+            buttons.style.display = 'none';
+        });
+
+        noBtn.addEventListener(isTouchDevice ? 'touchstart' : 'click', (e) => {
+            e.preventDefault();
+            clickCount++;
+            const messages = [
+                "Did you mean 'yes'?",
+                "Are you really sure?",
+                "Maybe reconsider?",
+                "Pretty please?",
+                "I'll keep asking!",
+                "Final chance? 😭"
+            ];
+            question.textContent = messages[clickCount % messages.length];
+            
+            // Move button randomly within screen boundaries
+            const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = Math.random() * maxX + 'px';
+            noBtn.style.top = Math.random() * maxY + 'px';
+        });
+
+        function startAnimation() {
+            const emojis = ['🌹', '🌸', '💐', '🌷', '🥀', '🌼', '🌺'];
+            const animationInterval = setInterval(() => {
+                const emoji = document.createElement('div');
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = Math.random() * 100 + 'vw';
+                emoji.style.fontSize = Math.random() * 20 + 15 + 'px';
+                emoji.classList.add('valentine-animation');
+                document.body.appendChild(emoji);
+                
+                setTimeout(() => emoji.remove(), 4000);
+            }, 300);
+        }
+
+        // Prevent zooming on mobile
+        document.addEventListener('gesturestart', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
